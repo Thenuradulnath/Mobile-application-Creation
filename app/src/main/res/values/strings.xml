@@ -7,6 +7,15 @@
     <string name="tried">Tried</string>
     <string name="no_items">No items to show</string>
     <string name="add_dish">Add dish</string>
+    <string name="search_hint">Search dishes or ingredients</string>
+    <string name="restaurant_title_placeholder">Discover dishes you want to try</string>
+    <string name="restaurant_title_single">Discover dishes from %1$s</string>
+    <string name="restaurant_title_multi">Discover dishes from %1$d restaurants</string>
+    <string name="search_no_results">No dishes match that search.</string>
+    <string name="add_photo">Add photo</string>
+    <string name="remove_photo">Remove photo</string>
+    <string name="preview_added_photo">Preview of the added tasting photo</string>
+    <string name="tasting_photo_content_description">Photo from your tasting notes</string>
 
     <!-- Categories -->
     <string-array name="categories">

@@ -100,8 +100,9 @@ class DishViewModel(application: Application) : AndroidViewModel(application) {
         applyCombinedFilters()
     }
 
-    fun markAsTried(dishId: Long, rating: Float, notes: String) = viewModelScope.launch {
-        repository.markAsTried(dishId, rating, notes)
+    fun markAsTried(dishId: Long, rating: Float, notes: String, photoPath: String?) =
+        viewModelScope.launch {
+            repository.markAsTried(dishId, rating, notes, photoPath)
         getDishById(dishId)
         applyCombinedFilters()
     }

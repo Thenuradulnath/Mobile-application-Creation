@@ -87,22 +87,54 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Allergens Section (Placeholder for now) -->
+        <!-- Allergens Section -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Allergens (Coming Soon)"
+            android:layout_marginTop="24dp"
+            android:text="Allergens"
             android:textSize="14sp"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp" />
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Allergen selection will be added in future update"
-            android:textSize="12sp"
+            android:layout_marginTop="4dp"
+            android:text="Select all allergens that apply to this dish"
             android:textColor="@color/gray"
-            android:layout_marginTop="4dp" />
+            android:textSize="12sp" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupAllergens"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:singleLine="false" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilCustomAllergen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCustomAllergen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Add custom allergen"
+                android:imeOptions="actionDone"
+                android:inputType="textCapWords" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAddAllergen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="8dp"
+            android:text="Add Allergen" />
 
         <!-- Action Buttons -->
         <LinearLayout

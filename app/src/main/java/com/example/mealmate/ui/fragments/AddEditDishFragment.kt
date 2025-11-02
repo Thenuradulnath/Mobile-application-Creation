@@ -4,15 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.mealmate.R
 import android.widget.AdapterView
 import android.widget.TextView
+import com.example.mealmate.data.entities.toJsonString
 import com.example.mealmate.data.entities.Dish
 import com.example.mealmate.databinding.FragmentAddEditDishBinding
 import com.example.mealmate.ui.viewmodels.DishViewModel
+import com.google.android.material.chip.Chip
+import java.util.Locale
 
 class AddEditDishFragment : Fragment() {
 
@@ -23,6 +27,19 @@ class AddEditDishFragment : Fragment() {
     private var isEditing = false
     private var currentDish: Dish? = null
     private var dishId: Long = 0L
+    private val defaultAllergens = listOf(
+        "Gluten",
+        "Egg",
+        "Fish",
+        "Milk",
+        "Soy",
+        "Nuts",
+        "Shellfish",
+        "Peanuts",
+        "Sesame",
+        "Wheat"
+    )
+    private val allergenOptions = mutableSetOf<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +52,7 @@ class AddEditDishFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupCategoryField()
+        setupAllergenChips()
 
         dishId = arguments?.getLong("dishId", 0L) ?: 0L
         isEditing = dishId != 0L
@@ -121,6 +139,7 @@ class AddEditDishFragment : Fragment() {
                 view.setText(currentCategory)
             }
         }
+        setupAllergenChips(dish.getAllergenList())
     }
 
     private fun setupNewDish() {
@@ -140,6 +159,23 @@ class AddEditDishFragment : Fragment() {
 
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
+        }
+
+        binding.btnAddAllergen.setOnClickListener {
+            val input = binding.etCustomAllergen.text?.toString()?.trim().orEmpty()
+            if (input.isEmpty()) {
+                binding.tilCustomAllergen.error = "Allergen name is required"
+            } else {
+                binding.tilCustomAllergen.error = null
+                addCustomAllergen(input)
+                binding.etCustomAllergen.text?.clear()
+            }
+        }
+
+        binding.etCustomAllergen.doAfterTextChanged {
+            if (!it.isNullOrBlank()) {
+                binding.tilCustomAllergen.error = null
+            }
         }
     }
 
@@ -174,11 +210,7 @@ class AddEditDishFragment : Fragment() {
             else -> ""
         }
 
-        val allergens = if (isEditing) {
-            currentDish?.allergens ?: "[]"
-        } else {
-            "[]"
-        }
+        val allergens = getSelectedAllergens().toJsonString()
 
         val dish = if (isEditing) {
             currentDish!!.copy(
@@ -211,5 +243,67 @@ class AddEditDishFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         viewModel.clearSelectedDish()
+    }
+
+    private fun setupAllergenChips(selectedAllergens: List<String> = emptyList()) {
+        val chipGroup = binding.chipGroupAllergens
+        chipGroup.removeAllViews()
+        allergenOptions.clear()
+
+        val combinedAllergens = (defaultAllergens + selectedAllergens).distinct()
+        combinedAllergens.forEach { allergen ->
+            allergenOptions.add(allergen)
+            val chip = createAllergenChip(allergen)
+            chip.isChecked = selectedAllergens.contains(allergen)
+            chipGroup.addView(chip)
+        }
+    }
+
+    private fun createAllergenChip(allergen: String): Chip {
+        return Chip(requireContext()).apply {
+            text = allergen
+            isCheckable = true
+            isCheckedIconVisible = true
+        }
+    }
+
+    private fun addCustomAllergen(allergen: String) {
+        val formatted = allergen.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+        }
+        val existingChip = findChipByText(formatted)
+        if (existingChip != null) {
+            existingChip.isChecked = true
+            return
+        }
+        if (allergenOptions.add(formatted)) {
+            val chip = createAllergenChip(formatted).apply {
+                isChecked = true
+            }
+            binding.chipGroupAllergens.addView(chip)
+        }
+    }
+
+    private fun findChipByText(text: String): Chip? {
+        val chipGroup = binding.chipGroupAllergens
+        for (index in 0 until chipGroup.childCount) {
+            val chip = chipGroup.getChildAt(index) as? Chip
+            if (chip?.text?.toString().equals(text, ignoreCase = true)) {
+                return chip
+            }
+        }
+        return null
+    }
+
+    private fun getSelectedAllergens(): List<String> {
+        val chipGroup = binding.chipGroupAllergens
+        val selected = mutableListOf<String>()
+        for (index in 0 until chipGroup.childCount) {
+            val chip = chipGroup.getChildAt(index) as? Chip
+            if (chip?.isChecked == true) {
+                selected.add(chip.text.toString())
+            }
+        }
+        return selected
     }
 }

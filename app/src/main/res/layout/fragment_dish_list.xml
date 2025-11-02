@@ -7,6 +7,47 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.DishListFragment">
 
+    <!-- Restaurant headline -->
+    <TextView
+        android:id="@+id/restaurantTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="24dp"
+        android:textAppearance="?attr/textAppearanceHeadlineMedium"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        tools:text="Seagrass Boutique Hospitality" 
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Dish search -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchInputLayout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:hint="@string/search_hint"
+        app:endIconDrawable="@drawable/ic_search"
+        app:endIconMode="custom"
+        app:layout_constraintTop_toBottomOf="@id/restaurantTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/searchAutoComplete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:completionThreshold="1"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            tools:text="Beef" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
     <!-- Top section: Tried vs To Try -->
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/toggleTryGroup"
@@ -18,7 +59,7 @@
         app:singleSelection="true"
         app:selectionRequired="true"
         app:checkedButton="@id/btn_to_try"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchInputLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
