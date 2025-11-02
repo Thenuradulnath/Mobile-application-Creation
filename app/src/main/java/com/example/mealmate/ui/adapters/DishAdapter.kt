@@ -21,6 +21,7 @@ class DishAdapter(
         fun bind(dish: Dish) {
             binding.dishName.text = dish.name
             binding.dishDescription.text = dish.description
+            binding.restaurantName.text = dish.restaurant
 
             // Set category badge
             binding.categoryBadge.text = when(dish.category) {
