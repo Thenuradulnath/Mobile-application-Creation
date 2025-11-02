@@ -1,5 +1,6 @@
 package com.example.mealmate.ui.fragments
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RatingBar
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -18,6 +20,7 @@ import com.example.mealmate.R
 import com.example.mealmate.data.entities.Dish
 import com.example.mealmate.databinding.FragmentDishDetailBinding
 import com.example.mealmate.ui.viewmodels.DishViewModel
+import com.google.android.material.button.MaterialButton
 
 class DishDetailFragment : Fragment() {
 
@@ -26,6 +29,17 @@ class DishDetailFragment : Fragment() {
     private val viewModel: DishViewModel by viewModels()
 
     private var dishId: Long = 0L
+    private var pendingPhotoUri: Uri? = null
+    private var pendingPhotoPreview: ImageView? = null
+    private var pendingRemovePhotoButton: MaterialButton? = null
+
+    private val pickImageLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                pendingPhotoUri = it
+                updateDialogPhotoPreview()
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,6 +107,13 @@ class DishDetailFragment : Fragment() {
             binding.tastingNotes.text =
                 if (dish.tastingNotes.isEmpty()) "No tasting notes added." else dish.tastingNotes
             binding.btnMarkTried.text = "Update Tasting Notes"
+            if (dish.photoPath.isNullOrBlank()) {
+                binding.tastingPhoto.visibility = View.GONE
+                binding.tastingPhoto.setImageDrawable(null)
+            } else {
+                binding.tastingPhoto.visibility = View.VISIBLE
+                binding.tastingPhoto.setImageURI(Uri.parse(dish.photoPath))
+            }
         } else {
             binding.statusIndicator.text = "TO TRY"
             binding.statusIndicator.setBackgroundColor(
@@ -100,6 +121,8 @@ class DishDetailFragment : Fragment() {
             )
             binding.tastedSection.visibility = View.GONE
             binding.btnMarkTried.text = "Mark as Tried"
+            binding.tastingPhoto.visibility = View.GONE
+            binding.tastingPhoto.setImageDrawable(null)
         }
     }
 
@@ -162,21 +185,47 @@ class DishDetailFragment : Fragment() {
             .inflate(R.layout.dialog_mark_tried, null)
         val ratingBar = dialogView.findViewById<RatingBar>(R.id.ratingBar)
         val notesEditText = dialogView.findViewById<EditText>(R.id.notesEditText)
+        val addPhotoButton = dialogView.findViewById<MaterialButton>(R.id.btnAddPhoto)
+        val removePhotoButton = dialogView.findViewById<MaterialButton>(R.id.btnRemovePhoto)
+        val photoPreview = dialogView.findViewById<ImageView>(R.id.photoPreview)
 
         // Prepopulate existing rating and notes if editing a tried dish
         ratingBar.rating = dish.rating
         notesEditText.setText(dish.tastingNotes)
 
-        AlertDialog.Builder(requireContext())
+        pendingPhotoPreview = photoPreview
+        pendingRemovePhotoButton = removePhotoButton
+        pendingPhotoUri = dish.photoPath?.takeIf { it.isNotBlank() }?.let { Uri.parse(it) }
+        updateDialogPhotoPreview()
+
+        addPhotoButton.setOnClickListener {
+            pendingPhotoPreview = photoPreview
+            pendingRemovePhotoButton = removePhotoButton
+            pickImageLauncher.launch("image/*")
+        }
+        removePhotoButton.setOnClickListener {
+            pendingPhotoUri = null
+            updateDialogPhotoPreview()
+        }
+
+        val dialog = AlertDialog.Builder(requireContext())
             .setTitle(if (dish.isTried) "Update Tasting Notes" else "Mark as Tried")
             .setView(dialogView)
             .setPositiveButton("Save") { _, _ ->
                 val rating = ratingBar.rating
                 val notes = notesEditText.text.toString().trim()
-                viewModel.markAsTried(dish.id, rating, notes)
+                viewModel.markAsTried(dish.id, rating, notes, pendingPhotoUri?.toString())
             }
             .setNegativeButton("Cancel", null)
-            .show()
+            .create()
+
+        dialog.setOnDismissListener {
+            pendingPhotoPreview = null
+            pendingRemovePhotoButton = null
+            pendingPhotoUri = null
+        }
+
+        dialog.show()
     }
 
     private fun showDeleteDialog(dish: Dish) {
@@ -195,5 +244,24 @@ class DishDetailFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         viewModel.clearSelectedDish()
+        pendingPhotoPreview = null
+        pendingRemovePhotoButton = null
+        pendingPhotoUri = null
+    }
+
+    private fun updateDialogPhotoPreview() {
+        val preview = pendingPhotoPreview ?: return
+        val removeButton = pendingRemovePhotoButton
+
+        val uri = pendingPhotoUri
+        if (uri != null) {
+            preview.visibility = View.VISIBLE
+            preview.setImageURI(uri)
+            removeButton?.visibility = View.VISIBLE
+        } else {
+            preview.setImageDrawable(null)
+            preview.visibility = View.GONE
+            removeButton?.visibility = View.GONE
+        }
     }
 }

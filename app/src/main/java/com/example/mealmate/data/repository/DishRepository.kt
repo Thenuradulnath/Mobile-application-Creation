@@ -20,8 +20,8 @@ class DishRepository(private val dishDao: DishDao) {
 
     suspend fun deleteDish(dish: Dish) = dishDao.delete(dish)
 
-    suspend fun markAsTried(dishId: Long, rating: Float, notes: String) {
-        dishDao.markAsTried(dishId, rating, notes, System.currentTimeMillis())
+    suspend fun markAsTried(dishId: Long, rating: Float, notes: String, photoPath: String?) {
+        dishDao.markAsTried(dishId, rating, notes, photoPath, System.currentTimeMillis())
     }
 
     fun getDishesToTry(): LiveData<List<Dish>> = dishDao.getDishesToTry()

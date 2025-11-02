@@ -134,6 +134,16 @@
                 android:isIndicator="true"
                 android:layout_marginTop="8dp" />
 
+            <ImageView
+                android:id="@+id/tasting_photo"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="12dp"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:visibility="gone"
+                android:contentDescription="@string/tasting_photo_content_description" />
+
             <TextView
                 android:id="@+id/tasting_notes"
                 android:layout_width="match_parent"
