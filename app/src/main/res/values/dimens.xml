@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="allergen_icon_size">20dp</dimen>
+    <dimen name="allergen_icon_margin">4dp</dimen>
+</resources>

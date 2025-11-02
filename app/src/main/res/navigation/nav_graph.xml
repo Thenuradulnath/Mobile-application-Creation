@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/dishListFragment">
+
+    <fragment
+        android:id="@+id/dishListFragment"
+        android:name="com.example.mealmate.ui.fragments.DishListFragment"
+        android:label="My Dishes"
+        tools:layout="@layout/fragment_dish_list">
+
+        <action
+            android:id="@+id/action_dishListFragment_to_dishDetailFragment"
+            app:destination="@id/dishDetailFragment" />
+
+        <action
+            android:id="@+id/action_dishListFragment_to_addEditDishFragment"
+            app:destination="@id/addEditDishFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/dishDetailFragment"
+        android:name="com.example.mealmate.ui.fragments.DishDetailFragment"
+        android:label="Dish Details"
+        tools:layout="@layout/fragment_dish_detail">
+
+        <argument
+            android:name="dishId"
+            app:argType="long" />
+
+        <action
+            android:id="@+id/action_dishDetailFragment_to_addEditDishFragment"
+            app:destination="@id/addEditDishFragment">
+            <argument
+                android:name="dishId"
+                app:argType="long"
+               />
+        </action>
+
+        <action
+            android:id="@+id/action_dishDetailFragment_to_dishListFragment"
+            app:destination="@id/dishListFragment"
+            app:popUpTo="@id/dishListFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addEditDishFragment"
+        android:name="com.example.mealmate.ui.fragments.AddEditDishFragment"
+        android:label="Add/Edit Dish"
+        tools:layout="@layout/fragment_add_edit_dish">
+
+        <argument
+            android:name="dishId"
+            app:argType="long" />
+
+        <action
+            android:id="@+id/action_addEditDishFragment_to_dishListFragment"
+            app:destination="@id/dishListFragment"
+            app:popUpTo="@id/dishListFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+</navigation>

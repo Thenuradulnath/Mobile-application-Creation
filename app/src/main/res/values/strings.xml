@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">MealMate</string>
+    <string name="no_dishes_found">No dishes found</string>
+    <string name="add_first_dish">Add your first dish to get started!</string>
+    <string name="empty_state">Empty state</string>
+    <string name="to_try">To Try</string>
+    <string name="tried">Tried</string>
+    <string name="no_items">No items to show</string>
+    <string name="add_dish">Add dish</string>
+
+    <!-- Categories -->
+    <string-array name="categories">
+        <item>STARTER</item>
+        <item>MAIN</item>
+        <item>DESSERT</item>
+        <item>SIDE</item>
+        <item>LUNCH</item>
+    </string-array>
+</resources>

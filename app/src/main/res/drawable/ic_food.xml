@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- background -->
+    <path
+        android:pathData="M0,0h24v24h-24z"
+        android:fillColor="#FFECECEC"/>
+    <!-- simplified fork and knife -->
+    <path
+        android:pathData="M7,4 v12 M7,18 v2 m0-9 h1 m3-7 v12 M11,18 v2 m0-9 h1"
+        android:strokeColor="#FF757575"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"/>
+</vector>
