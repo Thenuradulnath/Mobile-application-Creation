@@ -26,8 +26,14 @@ interface DishDao {
     @Delete
     suspend fun delete(dish: Dish)
 
-    @Query("UPDATE dishes SET isTried = 1, rating = :rating, tastingNotes = :notes, dateTried = :dateTried WHERE id = :dishId")
-    suspend fun markAsTried(dishId: Long, rating: Float, notes: String, dateTried: Long)
+    @Query("UPDATE dishes SET isTried = 1, rating = :rating, tastingNotes = :notes, photoPath = :photoPath, dateTried = :dateTried WHERE id = :dishId")
+    suspend fun markAsTried(
+        dishId: Long,
+        rating: Float,
+        notes: String,
+        photoPath: String?,
+        dateTried: Long,
+    )
 
     @Query("SELECT * FROM dishes WHERE isTried = 0 ORDER BY dateAdded DESC")
     fun getDishesToTry(): LiveData<List<Dish>>

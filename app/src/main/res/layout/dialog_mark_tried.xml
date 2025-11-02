@@ -20,4 +20,31 @@
         android:layout_height="wrap_content"
         android:hint="Tasting notes" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnAddPhoto"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/add_photo" />
+
+    <ImageView
+        android:id="@+id/photoPreview"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginTop="12dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        android:contentDescription="@string/preview_added_photo" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRemovePhoto"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/remove_photo"
+        android:visibility="gone" />
+
 </LinearLayout>
